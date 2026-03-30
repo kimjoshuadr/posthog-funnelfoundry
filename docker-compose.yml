@@ -291,7 +291,6 @@ services:
             file: docker-compose.base.yml
             service: cyclotron-janitor
         image: ghcr.io/posthog/posthog/cyclotron-janitor:master
-        build: !reset null
         environment:
             DATABASE_URL: 'postgres://posthog:posthog@db:5432/posthog'
             KAFKA_HOSTS: 'kafka:9092'
@@ -306,21 +305,18 @@ services:
             file: docker-compose.base.yml
             service: capture
         image: ghcr.io/posthog/posthog/capture:master
-        build: !reset null
 
     replay-capture:
         extends:
             file: docker-compose.base.yml
             service: replay-capture
         image: ghcr.io/posthog/posthog/replay-capture:master
-        build: !reset null
 
     property-defs-rs:
         extends:
             file: docker-compose.base.yml
             service: property-defs-rs
         image: ghcr.io/posthog/posthog/property-defs-rs:master
-        build: !reset null
         depends_on:
             kafka-init:
                 condition: service_completed_successfully
@@ -341,7 +337,6 @@ services:
             file: docker-compose.base.yml
             service: feature-flags
         image: ghcr.io/posthog/posthog/feature-flags:master
-        build: !reset null
         depends_on:
             - db
             - redis7
