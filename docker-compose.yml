@@ -40,7 +40,7 @@ services:
             - zookeeper-datalog:/datalog
             - zookeeper-data:/data
             - zookeeper-logs:/logs
-            
+
     kafka:
         extends:
             file: docker-compose.base.yml
@@ -51,6 +51,8 @@ services:
             KAFKA_LOG_RETENTION_MS: 3600000
             KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS: 300000
             KAFKA_LOG_RETENTION_HOURS: 1
+        volumes:
+            - redpanda-data:/var/lib/redpanda/data
 
     worker:
         extends:
@@ -82,13 +84,12 @@ services:
                 condition: service_healthy
             web:
                 condition: service_started
-                
+
     web:
         extends:
             file: docker-compose.base.yml
             service: web
         command: /compose/start
-        # EXPOSE PORT 8000 SO COOLIFY CAN ROUTE TRAFFIC HERE
         ports:
             - "8000:8000"
         volumes:
@@ -240,19 +241,19 @@ services:
             - 7233:7233
         volumes:
             - ./posthog/docker/temporal/dynamicconfig:/etc/temporal/config/dynamicconfig
-            
+
     elasticsearch:
         extends:
             file: docker-compose.base.yml
             service: elasticsearch
-            
+
     temporal-admin-tools:
         extends:
             file: docker-compose.base.yml
             service: temporal-admin-tools
         depends_on:
             - temporal
-            
+
     temporal-ui:
         extends:
             file: docker-compose.base.yml
@@ -264,7 +265,7 @@ services:
                 condition: service_started
             db:
                 condition: service_healthy
-                
+
     temporal-django-worker:
         command: /compose/temporal-django-worker
         extends:
